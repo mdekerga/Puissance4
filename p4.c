@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <conio.h>
 
 // les constantes
 #define NB_LIGNES 6
 #define NB_COLONNES 7
+#define MILIEU NB_COLONNES / 2
 #define PION_A 'X'
 #define PION_B 'O'
 #define VIDE ' '
@@ -22,10 +24,10 @@ char adversaire;
 
 // prototypes des fonctions
 void initGrille(Grille laGrille);
-void afficher(Grille laGrille, char pion);
+void afficher(Grille laGrille, char pion, int colonne);
 bool grillePleine(Grille laGrille);
 void jouer(Grille laGrille, char pion, int * ligne, int * colonne);
-int choisirColonne(Grille laGrille, char pion);
+int choisirColonne(Grille laGrille, char pion,int colonne);
 int chercherLigne(Grille laGrille, int col);
 int alignement(Grille tab, int l, int c, int dl, int dc, char pion);
 int minmax(Grille tab,char pion, int profondeur, int alpha, int beta,int lig, int col, bool max);
@@ -43,16 +45,16 @@ int main()
     int ligne, colonne;
     
     initGrille(laGrille);
-    afficher(laGrille, PION_A);
+    afficher(laGrille, PION_A, MILIEU);
 
     while (vainqueur==INCONNU && !grillePleine(laGrille)){
         jouer(laGrille,PION_A, &ligne, &colonne);
-        afficher(laGrille, PION_B);
+        afficher(laGrille, PION_B, MILIEU);
         if (estVainqueur(laGrille, ligne, colonne) ){
             vainqueur = PION_A;
         } else if (!grillePleine(laGrille)){
             jouer(laGrille,PION_B,&ligne, &colonne);
-            afficher(laGrille, PION_A);
+            afficher(laGrille, PION_A, MILIEU);
             if (estVainqueur(laGrille, ligne, colonne) ){
                 vainqueur = PION_B;
             }
@@ -72,15 +74,23 @@ void initGrille(Grille laGrille){
     }
 }
 
-void afficher(Grille laGrille, char pion){
-    int l, c;
-    system("clear");
+void afficher(Grille laGrille, char pion, int colonne){
+    int l, c, i =0;
+    system("cls");
     printf("\t");
+
+    while(i < colonne){
+        printf("    ");
+        i++;
+    }
+
     printf("  %c\n", pion);
     printf("\t");
     for (c=0; c<NB_COLONNES ; c++){
         printf("----");
     }
+
+    
     printf("-\n");
     for (l=0 ; l<NB_LIGNES ; l++){
         printf("\t");
@@ -99,6 +109,7 @@ void afficher(Grille laGrille, char pion){
             printf("  %d ",c);
     }
     printf("\n\n");
+    printf("Commandes :\nDeplacer a droite : d , Deplacer a gauche : q , Valider la colonne : Espace \n");
 
 }
 
@@ -117,20 +128,42 @@ bool grillePleine(Grille laGrille){
 void jouer(Grille laGrille, char pion, int * ligne, int * colonne ){
    *ligne = -1;
     do {
-        *colonne = choisirColonne(laGrille, pion);
+        *colonne = choisirColonne(laGrille, pion, MILIEU);
         *ligne = chercherLigne(laGrille, *colonne);
     }while (*ligne==-1);
     laGrille[*ligne][*colonne] = pion;
 }
 
-int choisirColonne(Grille laGrille, char pion){
-    int col;
+int choisirColonne(Grille g,char pion,int colonne)
+{
+    int poscol;
+    char appuie;
+    poscol = MILIEU;
+        while(appuie != ' ')
+        {
+            scanf("%c",&appuie);
 
-    do{
-        printf("Numero de colonne ? ");
-        scanf("%d", &col);
-    } while (col<0 ||col>6);
-    return col;
+            if(appuie == 'd')
+            {
+                poscol++;
+                if(poscol > NB_LIGNES)
+                {
+                    poscol = 0;
+
+                }           
+            }
+            else if(appuie == 'q')
+            {
+                poscol--;
+                if(poscol < 0)
+                {
+                    poscol = NB_COLONNES;
+                } 
+
+            }
+        afficher(g,pion,poscol);
+        }
+    return poscol;
 }
 
 int chercherLigne(Grille laGrille, int col){
