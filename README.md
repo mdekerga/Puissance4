@@ -18,3 +18,9 @@ Le programme permet de faire jouer 2 personnes à un puissance 4 l'un joue les X
     ````
     ./p4
    ````
+
+## Aperçu
+![image](https://github.com/user-attachments/assets/82f8c057-ae82-4dc9-9050-53222473a4b4)
+
+
+
