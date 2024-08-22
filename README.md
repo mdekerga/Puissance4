@@ -6,6 +6,9 @@ Programmation d'un puissance 4 en C afin de s'entrainer avec ce langage.
 
 Le programme permet de faire jouer 2 personnes à un puissance 4 l'un joue les X, l'autre joue les O.
 
+## Prérequis
+Compilateur C  
+
 ## Installation
 
 1. Ouvrir un terminal
